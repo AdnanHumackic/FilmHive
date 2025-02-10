@@ -1,0 +1,6 @@
+@filmHive.API_HostAddress = http://localhost:5200
+
+GET {{filmHive.API_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
