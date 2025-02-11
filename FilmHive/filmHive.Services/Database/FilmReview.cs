@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace filmHive.Services.Database;
 
-public partial class FilmReview
+public partial class FilmReview:ISoftDelete
 {
     public int FilmReviewId { get; set; }
 
