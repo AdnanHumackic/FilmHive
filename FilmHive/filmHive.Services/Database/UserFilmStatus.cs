@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace filmHive.Services.Database;
 
-public partial class UserFilmStatus:ISoftDelete
+public partial class UserFilmStatus:ISoftDelete, ICreated, IModified
 {
     public int UserFilmStatusId { get; set; }
 
@@ -19,7 +19,7 @@ public partial class UserFilmStatus:ISoftDelete
 
     public DateTime? TimeOfDeletion { get; set; }
 
-    public DateTime CreatedAd { get; set; }
+    public DateTime CreatedAt { get; set; }
 
     public DateTime? ModifiedAt { get; set; }
 

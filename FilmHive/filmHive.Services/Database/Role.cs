@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace filmHive.Services.Database;
 
-public partial class Role:ISoftDelete
+public partial class Role:ISoftDelete, ICreated, IModified
 {
     public int RoleId { get; set; }
 
@@ -19,7 +19,7 @@ public partial class Role:ISoftDelete
 
     public DateTime CreatedAt { get; set; }
 
-    public int? ModifiedAt { get; set; }
+    public DateTime? ModifiedAt { get; set; }
 
     public int? ModifiedBy { get; set; }
 

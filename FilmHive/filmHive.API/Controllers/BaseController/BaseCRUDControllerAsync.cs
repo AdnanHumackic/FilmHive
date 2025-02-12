@@ -7,7 +7,7 @@ namespace filmHive.API.Controllers.BaseController
 {
     [Route("api/[controller]")]
     [ApiController]
-    //[Authorize]
+    [Authorize]
     public class BaseCRUDControllerAsync<TModel, TSearch, TInsert, TUpdate> : BaseControllerAsync<TModel, TSearch> where TSearch : BaseSearchObject where TModel : class
     {
         protected new ICRUDServiceAsync<TModel, TSearch, TInsert, TUpdate> _service;

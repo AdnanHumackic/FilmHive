@@ -8,7 +8,7 @@ namespace filmHive.API.Controllers.BaseController
 {
     [ApiController]
     [Route("[controller]")]
-    //[Authorize]
+    [Authorize]
     public class BaseControllerAsync<TModel, TSearch> : ControllerBase where TSearch : BaseSearchObject
     {
         private readonly IServiceAsync<TModel, TSearch> _service;

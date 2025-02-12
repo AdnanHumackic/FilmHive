@@ -198,10 +198,11 @@ public partial class FilmHiveContext : DbContext
             entity.ToTable("Genre");
 
             entity.Property(e => e.GenreId).HasColumnName("GenreID");
+            entity.Property(e => e.CreatedAt).HasColumnType("datetime");
             entity.Property(e => e.Description)
                 .HasMaxLength(255)
                 .IsUnicode(false);
-            entity.Property(e => e.ModifiedAt).HasColumnType("date");
+            entity.Property(e => e.ModifiedAt).HasColumnType("datetime");
             entity.Property(e => e.Name)
                 .HasMaxLength(100)
                 .IsUnicode(false);
@@ -288,6 +289,7 @@ public partial class FilmHiveContext : DbContext
             entity.Property(e => e.Description)
                 .HasMaxLength(200)
                 .IsUnicode(false);
+            entity.Property(e => e.ModifiedAt).HasColumnType("datetime");
             entity.Property(e => e.Name)
                 .HasMaxLength(50)
                 .IsUnicode(false);
@@ -344,7 +346,7 @@ public partial class FilmHiveContext : DbContext
             entity.ToTable("UserFilmStatus");
 
             entity.Property(e => e.UserFilmStatusId).HasColumnName("UserFilmStatusID");
-            entity.Property(e => e.CreatedAd).HasColumnType("date");
+            entity.Property(e => e.CreatedAt).HasColumnType("date");
             entity.Property(e => e.FilmId).HasColumnName("FilmID");
             entity.Property(e => e.ModifiedAt).HasColumnType("date");
             entity.Property(e => e.TimeOfDeletion).HasColumnType("date");

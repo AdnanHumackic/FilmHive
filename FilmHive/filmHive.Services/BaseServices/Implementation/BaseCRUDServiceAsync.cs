@@ -1,4 +1,5 @@
 ﻿using filmHive.Model.SearchObject;
+using filmHive.Services.Auth;
 using filmHive.Services.Database;
 using filmHive.Services.ExceptionFilter;
 using MapsterMapper;
@@ -13,7 +14,7 @@ namespace filmHive.Services.BaseServices.Implementation
 {
     public class BaseCRUDServiceAsync<TModel, TSearch, TDbEntity, TInsert, TUpdate> : BaseServiceAsync<TModel, TSearch, TDbEntity> where TModel : class where TSearch : BaseSearchObject where TDbEntity : class
     {
-        public BaseCRUDServiceAsync(FilmHiveContext context, IMapper mapper) : base(context, mapper)
+        public BaseCRUDServiceAsync(FilmHiveContext context, IMapper mapper, ICurrentUserServiceAsync currentUserService) : base(context, mapper, currentUserService)
         {
         }
 
@@ -23,6 +24,12 @@ namespace filmHive.Services.BaseServices.Implementation
             TDbEntity entity = Mapper.Map<TDbEntity>(request);
 
             await BeforeInsertAsync(request, entity);
+
+            if (entity is ICreated createdEntity)
+            {
+                createdEntity.CreatedAt = DateTime.Now;
+            }
+
             Context.Add(entity);
             await Context.SaveChangesAsync(cancellationToken);
 
@@ -44,6 +51,14 @@ namespace filmHive.Services.BaseServices.Implementation
             Mapper.Map(request, entity);
             await BeforeUpdateAsync(request, entity);
 
+            if (entity is IModified modifiedEntity)
+            {
+                modifiedEntity.ModifiedAt = DateTime.Now;
+                if (modifiedEntity.ModifiedAt == null)
+                {
+                    modifiedEntity.ModifiedBy=CurrentUserService.GetActiveUserId();
+                }
+            }
 
             await Context.SaveChangesAsync(cancellationToken);
 
@@ -69,6 +84,7 @@ namespace filmHive.Services.BaseServices.Implementation
             {
                 softDeleteEntity.IsDeleted = true;
                 softDeleteEntity.TimeOfDeletion = DateTime.Now;
+                softDeleteEntity.IsActive = false;
                 Context.Update(entity);
             }
             else

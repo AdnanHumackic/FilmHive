@@ -10,11 +10,12 @@ namespace filmHive.Services.Database
     {
         public bool IsDeleted { get; set; }
         public DateTime? TimeOfDeletion { get; set; }
-
+        public bool IsActive { get; set; }
         public void Undo()
         {
             IsDeleted = false;
             TimeOfDeletion = null;
+            IsActive=true;
         }
     }
 }

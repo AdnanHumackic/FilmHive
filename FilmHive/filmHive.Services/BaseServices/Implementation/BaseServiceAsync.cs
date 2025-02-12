@@ -1,5 +1,6 @@
 ﻿using filmHive.Model;
 using filmHive.Model.SearchObject;
+using filmHive.Services.Auth;
 using filmHive.Services.BaseServices.Interfaces;
 using filmHive.Services.Database;
 using filmHive.Services.ExceptionFilter;
@@ -19,11 +20,14 @@ namespace filmHive.Services.BaseServices.Implementation
     {
         public FilmHiveContext Context { get; }
         public IMapper Mapper { get; }
+        public ICurrentUserServiceAsync CurrentUserService { get; }
 
-        public BaseServiceAsync(FilmHiveContext context, IMapper mapper)
+        public BaseServiceAsync(FilmHiveContext context, IMapper mapper,
+            ICurrentUserServiceAsync currentUserService)
         {
             Context = context;
             Mapper = mapper;
+            CurrentUserService = currentUserService;
         }
 
         public async Task<PagedResult<TModel>> GetPagedAsync(TSearch search, CancellationToken cancellationToken = default)

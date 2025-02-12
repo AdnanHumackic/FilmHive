@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace filmHive.Services.Database;
 
-public partial class Genre:ISoftDelete
+public partial class Genre: ISoftDelete, ICreated, IModified
 {
     public int GenreId { get; set; }
 
@@ -17,7 +17,7 @@ public partial class Genre:ISoftDelete
 
     public DateTime? TimeOfDeletion { get; set; }
 
-    public bool CreatedAt { get; set; }
+    public DateTime CreatedAt { get; set; }
 
     public DateTime? ModifiedAt { get; set; }
 
