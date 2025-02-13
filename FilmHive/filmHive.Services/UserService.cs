@@ -69,30 +69,6 @@ namespace filmHive.Services
                 query = query.Include(x => x.Role);
             }
 
-            if (search?.IsDeleted != null)
-            {
-                if (search.IsDeleted == false)
-                {
-                    query = query.Where(x => x.IsDeleted == false || x.IsDeleted == null);
-                }
-                else
-                {
-                    query = query.Where(x => x.IsDeleted == true);
-                }
-            }
-
-            if (search?.IsActive != null)
-            {
-                if (search.IsActive == false)
-                {
-                    query = query.Where(x => x.IsActive == false || x.IsActive == null);
-                }
-                else
-                {
-                    query = query.Where(x => x.IsActive == true);
-                }
-            }
-
             if (search.RoleId != null)
             {
                 query = query.Where(x => x.Role.RoleId == search.RoleId);

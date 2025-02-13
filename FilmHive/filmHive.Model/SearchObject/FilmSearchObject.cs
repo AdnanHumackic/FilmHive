@@ -13,8 +13,6 @@ namespace filmHive.Model.SearchObject
         public DateTime? ReleaseYearGTE { get; set; }
         public DateTime? ReleaseYearLTE { get; set; }
         public int? Status { get; set; }
-        public bool? IsDeleted { get; set; }
-        public bool? IsActive { get; set; }
 
     }
 }

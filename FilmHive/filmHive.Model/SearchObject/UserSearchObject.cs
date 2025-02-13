@@ -15,7 +15,5 @@ namespace filmHive.Model.SearchObject
         public string? UsernameGTE { get; set; } 
         public int? RoleId { get; set; }
         public bool? IsUserRoleIncluded { get; set; }
-        public bool? IsDeleted { get; set; }
-        public bool? IsActive { get; set; }
     }
 }

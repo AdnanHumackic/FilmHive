@@ -52,30 +52,6 @@ namespace filmHive.Services
                 query = query.Where(x => x.ReleaseYear < search.ReleaseYearLTE);
             }
 
-            if (search?.IsDeleted != null)
-            {
-                if (search.IsDeleted == false)
-                {
-                    query = query.Where(x => x.IsDeleted == false || x.IsDeleted == null);
-                }
-                else
-                {
-                    query = query.Where(x => x.IsDeleted == true);
-                }
-            }
-
-            if (search?.IsActive != null)
-            {
-                if (search.IsActive == false)
-                {
-                    query = query.Where(x => x.IsActive == false || x.IsActive == null);
-                }
-                else
-                {
-                    query = query.Where(x => x.IsActive == true);
-                }
-            }
-
             return query;
         }
     }

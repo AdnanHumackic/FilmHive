@@ -15,7 +15,5 @@ namespace filmHive.Model.SearchObject
         public DateTime? ReviewDateLTE { get; set; }
         public bool? IsFilmIncluded { get; set; }
         public bool? IsUserIncluded { get; set; }
-        public bool? IsDeleted { get; set; }
-        public bool? IsActive { get; set; }
     }
 }

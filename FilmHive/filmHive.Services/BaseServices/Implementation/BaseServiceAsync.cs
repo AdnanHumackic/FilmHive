@@ -41,6 +41,15 @@ namespace filmHive.Services.BaseServices.Implementation
                 query = ApplyIncludes(query, search.IncludeTables);
             }
 
+            if (search.IsDeleted != null)
+            {
+                query = query.Where(x => EF.Property<bool>(x, "IsDeleted") == search.IsDeleted);
+            }
+
+            if (search.IsActive != null)
+            {
+                query = query.Where(x => EF.Property<bool>(x, "IsActive") == search.IsActive);
+            }
 
             query = AddFilter(search, query);
 
