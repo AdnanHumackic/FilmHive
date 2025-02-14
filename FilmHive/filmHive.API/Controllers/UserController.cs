@@ -16,6 +16,7 @@ namespace filmHive.API.Controllers
         {
         }
 
+        [AllowAnonymous]
         [HttpPost("login")]
         public Model.User Login(string username, string password)
         {

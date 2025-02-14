@@ -3,16 +3,34 @@ import { Image, TouchableOpacity, Text, TextInput, View, StyleSheet } from 'reac
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import * as yup from 'yup';
 import { Formik } from 'formik';
+import UserService from '../services/userService';
+import AuthProvider from '../services/authProvider';
+import { useNavigation } from '@react-navigation/native';
 
 export default function LoginScreen() {
+    const navigation = useNavigation();
 
     const validationSchema = yup.object().shape({
         username: yup.string().required('Please enter username.'),
         password: yup.string().required('Please enter password.'),
     });
 
-    const login = (values) => {
-        console.log('Form data:', values);
+    const login = async (values) => {
+        const userService = new UserService();
+        try {
+            const { username, password } = values;
+            const user = await userService.login(username, password);
+            console.log('Logged in user:', user);
+
+            if (user.isDeleted == true || user.isActive == false) {
+                alert("Your account is suspended.")
+            }
+            else {
+                navigation.navigate('Home');
+            }
+        } catch (error) {
+            alert(error.message);
+        }
     };
 
     return (
