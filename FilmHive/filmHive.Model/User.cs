@@ -15,7 +15,6 @@ namespace filmHive.Model
         public string? Biography { get; set; }
         public byte[]? ProfilePicture { get; set; }
         public byte[]? ProfileThumbnail { get; set; }
-        public DateTime DateOfBirth { get; set; }
         public bool IsDeleted { get; set; }
         public bool IsActive { get; set; }
         public DateTime? TimeOfDeletion { get; set; }

@@ -307,7 +307,6 @@ public partial class FilmHiveContext : DbContext
                 .HasMaxLength(1000)
                 .IsUnicode(false);
             entity.Property(e => e.CreatedAt).HasColumnType("date");
-            entity.Property(e => e.DateOfBirth).HasColumnType("date");
             entity.Property(e => e.Email)
                 .HasMaxLength(50)
                 .IsUnicode(false);

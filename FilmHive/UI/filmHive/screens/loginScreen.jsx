@@ -1,11 +1,11 @@
 import React from 'react';
-import { Image, TouchableOpacity, Text, TextInput, View, StyleSheet } from 'react-native';
-import Ionicons from 'react-native-vector-icons/Ionicons';
+import { Image, TouchableOpacity, Text, View, StyleSheet } from 'react-native';
 import * as yup from 'yup';
 import { Formik } from 'formik';
 import UserService from '../services/userService';
 import AuthProvider from '../services/authProvider';
 import { useNavigation } from '@react-navigation/native';
+import CustomInput from '../services/reusableInput';
 
 export default function LoginScreen() {
     const navigation = useNavigation();
@@ -20,12 +20,27 @@ export default function LoginScreen() {
         try {
             const { username, password } = values;
             const user = await userService.login(username, password);
-            console.log('Logged in user:', user);
-
             if (user.isDeleted == true || user.isActive == false) {
                 alert("Your account is suspended.")
             }
             else {
+                AuthProvider.userId = user.userId;
+                AuthProvider.username = user.username;
+                AuthProvider.password = user.password;
+                AuthProvider.firstName = user.firstName;
+                AuthProvider.lastName = user.lastName;
+                AuthProvider.email = user.email;
+                AuthProvider.phone = user.phone;
+                AuthProvider.biography = user.biography;
+                AuthProvider.profilePicture = user.profilePicture;
+                AuthProvider.profileThumbnail = user.profileThumbnail;
+                AuthProvider.isDeleted = user.isDeleted;
+                AuthProvider.isActive = user.isActive;
+                AuthProvider.timeOfDeletion = user.timeOfDeletion;
+                AuthProvider.createdAt = user.createdAt;
+                AuthProvider.modifiedAt = user.modifiedAt;
+                AuthProvider.modifiedBy = user.modifiedBy;
+                AuthProvider.roleId = user.roleId;
                 navigation.navigate('Home');
             }
         } catch (error) {
@@ -43,44 +58,38 @@ export default function LoginScreen() {
                     onSubmit={login}
                 >
                     {({ handleChange, handleBlur, handleSubmit, values, errors, touched }) => (
-                        <View>
+                        <View style={{ width: '70%' }}>
                             <Text style={styles.loginText}>Login</Text>
                             <Text style={styles.loginTextBeneath}>Please sign in to continue.</Text>
-                            <View style={[styles.inputContainer, { width: '70%' }]}>
-                                <Ionicons name="person-circle-outline" size={20} color="white" />
-                                <TextInput
-                                    style={styles.input}
-                                    placeholder="Username"
-                                    placeholderTextColor="white"
-                                    onChangeText={handleChange('username')}
-                                    onBlur={handleBlur('username')}
-                                    value={values.username}
-                                />
-                            </View>
-                            {errors.username && touched.username && (
-                                <Text style={styles.errorText}>{errors.username}</Text>
-                            )}
-                            <View style={[styles.inputContainer, { width: '70%' }]}>
-                                <Ionicons name="lock-closed-outline" size={20} color="white" />
-                                <TextInput
-                                    style={styles.input}
-                                    secureTextEntry={true}
-                                    placeholder="Password"
-                                    placeholderTextColor="white"
-                                    onChangeText={handleChange('password')}
-                                    onBlur={handleBlur('password')}
-                                    value={values.password}
-                                />
-                            </View>
-                            {errors.password && touched.password && (
-                                <Text style={styles.errorText}>{errors.password}</Text>
-                            )}
+
+                            <CustomInput
+                                iconName="person-circle-outline"
+                                placeholder="Username"
+                                value={values.username}
+                                onChangeText={handleChange('username')}
+                                onBlur={handleBlur('username')}
+                                error={errors.username}
+                                touched={touched.username}
+                            />
+
+                            <CustomInput
+                                iconName="lock-closed-outline"
+                                placeholder="Password"
+                                value={values.password}
+                                onChangeText={handleChange('password')}
+                                onBlur={handleBlur('password')}
+                                error={errors.password}
+                                touched={touched.password}
+                                secureTextEntry={true}
+                            />
+
                             <View style={styles.buttonContainer}>
                                 <TouchableOpacity style={styles.button} onPress={handleSubmit}>
                                     <Text style={styles.buttonText}>Login</Text>
                                 </TouchableOpacity>
                             </View>
-                            <TouchableOpacity onPress={() => console.log('navigating to sign up')}>
+
+                            <TouchableOpacity onPress={() => navigation.navigate('SignUp')}>
                                 <Text style={styles.signUpText}>
                                     Don't have an account? <Text style={styles.signUpLink}>Sign up</Text>
                                 </Text>
@@ -88,8 +97,8 @@ export default function LoginScreen() {
                         </View>
                     )}
                 </Formik>
-            </View>
-        </View>
+            </View >
+        </View >
     );
 }
 
@@ -117,22 +126,6 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         marginTop: 150,
     },
-    inputContainer: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        borderColor: 'gray',
-        borderWidth: 1,
-        borderRadius: 12,
-        paddingHorizontal: 10,
-        marginBottom: 10,
-        backgroundColor: '#1F1D36',
-    },
-    input: {
-        flex: 1,
-        height: 40,
-        color: 'white',
-        backgroundColor: '#1F1D36',
-    },
     buttonContainer: {
         marginTop: 20,
     },
@@ -146,13 +139,6 @@ const styles = StyleSheet.create({
         fontSize: 16,
         fontWeight: 'bold',
         textAlign: 'center',
-    },
-
-    errorText: {
-        color: 'red',
-        fontSize: 14,
-        marginBottom: 5,
-        marginLeft: 15,
     },
     banner: {
         position: 'absolute',

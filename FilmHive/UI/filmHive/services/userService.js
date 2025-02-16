@@ -31,6 +31,11 @@ class UserService extends BaseProvider {
         return response;
     }
 
+    async addUser(user) {
+        const response = await this.insert(user);
+        return response;
+    }
+
     async login(username, password) {
         const url = `${BaseProvider.baseUrl}User/login?username=${username}&password=${password}`;
         const headers = this.createHeaders();

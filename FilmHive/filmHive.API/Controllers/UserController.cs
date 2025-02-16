@@ -1,4 +1,5 @@
 ﻿using filmHive.API.Controllers.BaseController;
+using filmHive.Model;
 using filmHive.Model.Request;
 using filmHive.Model.SearchObject;
 using filmHive.Services;
@@ -21,6 +22,11 @@ namespace filmHive.API.Controllers
         public Model.User Login(string username, string password)
         {
             return (_service as IUserService).Login(username, password);
+        }
+        [AllowAnonymous]
+        public override Task<User> Insert(UserInsertRequest request, CancellationToken cancellationToken = default)
+        {
+            return base.Insert(request, cancellationToken);
         }
     }
 }

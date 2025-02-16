@@ -27,8 +27,6 @@ public partial class User:ISoftDelete, ICreated, IModified
 
     public byte[]? ProfileThumbnail { get; set; }
 
-    public DateTime DateOfBirth { get; set; }
-
     public bool IsDeleted { get; set; }
 
     public bool IsActive { get; set; }
