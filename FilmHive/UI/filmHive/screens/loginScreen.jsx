@@ -5,7 +5,7 @@ import { Formik } from 'formik';
 import UserService from '../services/userService';
 import AuthProvider from '../services/authProvider';
 import { useNavigation } from '@react-navigation/native';
-import CustomInput from '../services/reusableInput';
+import CustomInput from '../components/reusableInput';
 
 export default function LoginScreen() {
     const navigation = useNavigation();

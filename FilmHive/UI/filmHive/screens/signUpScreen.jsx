@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { Image, TouchableOpacity, Text, View, StyleSheet, ScrollView, Button } from 'react-native';
 import * as yup from 'yup';
 import { Formik } from 'formik';
-import CustomInput from '../services/reusableInput';
+import CustomInput from '../components/reusableInput';
 import UserService from '../services/userService';
 
 export default function SignUpScreen({ navigation }) {

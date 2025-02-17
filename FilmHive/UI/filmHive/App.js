@@ -2,15 +2,13 @@ import React, { useEffect } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import LoginScreen from './screens/loginScreen';
-import HomeScreen from './screens/homeScreen';
 import SignUpScreen from './screens/signUpScreen';
+import DrawerNavigator from './components/drawerNavigation';
 
 const Stack = createNativeStackNavigator();
 
 export default function App() {
-
-  useEffect(() => {
-  }, []);
+  useEffect(() => { }, []);
 
   return (
     <NavigationContainer>
@@ -21,13 +19,13 @@ export default function App() {
           options={{ headerShown: false }}
         />
         <Stack.Screen
-          name="Home"
-          component={HomeScreen}
+          name="SignUp"
+          component={SignUpScreen}
           options={{ headerShown: false }}
         />
         <Stack.Screen
-          name="SignUp"
-          component={SignUpScreen}
+          name="Home"
+          component={DrawerNavigator}
           options={{ headerShown: false }}
         />
       </Stack.Navigator>
