@@ -19,14 +19,15 @@ export default function LoginScreen() {
         const userService = new UserService();
         try {
             const { username, password } = values;
-            const user = await userService.login(username, password);
+            AuthProvider.username = username;
+            AuthProvider.password = password;
+            const user = await userService.login(AuthProvider.username, AuthProvider.password);
             if (user.isDeleted == true || user.isActive == false) {
                 alert("Your account is suspended.")
             }
             else {
                 AuthProvider.userId = user.userId;
                 AuthProvider.username = user.username;
-                AuthProvider.password = user.password;
                 AuthProvider.firstName = user.firstName;
                 AuthProvider.lastName = user.lastName;
                 AuthProvider.email = user.email;

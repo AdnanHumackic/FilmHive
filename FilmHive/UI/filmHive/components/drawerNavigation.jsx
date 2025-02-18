@@ -2,6 +2,7 @@ import React from 'react';
 import { createDrawerNavigator } from '@react-navigation/drawer';
 import { Ionicons } from '@expo/vector-icons';
 import HomeScreen from '../screens/homeScreen';
+import FilmListScreen from '../screens/Film/filmListScreen';
 
 const Drawer = createDrawerNavigator();
 
@@ -35,7 +36,7 @@ function DrawerNavigator() {
             />
             <Drawer.Screen
                 name="Films"
-                component={HomeScreen}
+                component={FilmListScreen}
                 options={{
                     drawerIcon: ({ color, size }) => (
                         <Ionicons name="film-outline" size={size} color={color} />

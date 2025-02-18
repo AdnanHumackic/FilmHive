@@ -7,15 +7,15 @@ export default function HomeScreen({ navigation }) {
     return (
         <View style={styles.container}>
             <ScrollView contentContainerStyle={styles.scrollViewContent}>
-
-                <TouchableOpacity onPress={() => navigation.openDrawer()}>
-                    <Ionicons
-                        name="menu-outline"
-                        size={30}
-                        color="white"
-                        style={styles.menuIcon}
-                    />
-                </TouchableOpacity>
+                <View style={styles.menuIconContainer}>
+                    <TouchableOpacity onPress={() => navigation.openDrawer()} style={styles.menuIcon}>
+                        <Ionicons
+                            name="menu-outline"
+                            size={30}
+                            color="white"
+                        />
+                    </TouchableOpacity>
+                </View>
                 <Text style={styles.text}>Hello, <Text style={styles.username}>{AuthProvider.username}</Text></Text>
                 <Text style={styles.greetingText}>Review or track film you’ve watched...</Text>
             </ScrollView>
@@ -53,9 +53,21 @@ const styles = StyleSheet.create({
         marginBottom: 10,
     },
     menuIcon: {
+        width: 30,
+        height: 30,
+        borderRadius: 20,
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
+    menuIconContainer: {
         position: 'absolute',
         top: 40,
         left: 20,
         zIndex: 1,
+        borderRadius: 30,
+        backgroundColor: '#E9A6A6',
+        padding: 10,
+        alignItems: 'center',
+        justifyContent: 'center',
     },
 });
