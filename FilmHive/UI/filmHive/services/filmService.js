@@ -1,32 +1,16 @@
 import BaseProvider from './baseService';
-
+import Film from '../models/film';
 class FilmService extends BaseProvider {
     constructor() {
         super('Film');
     }
 
-    fromJson(data) {
-        return {
-            filmId: data.id,
-            title: data.title,
-            description: data.description,
-            duration: data.duration,
-            poster: data.poster,
-            thumbnail: data.thumbnail,
-            trailerUrl: data.trailerUrl,
-            releaseYear: data.releaseYear,
-            status: data.status,
-            isDeleted: data.isDeleted,
-            isActive: data.isActive,
-            timeOfDeletion: data.timeOfDeletion,
-            createdAt: data.createdAt,
-            modifiedAt: data.modifiedAt,
-            modifiedBy: data.modifiedBy,
-        };
-    }
     async getFilms(filter = {}) {
         const response = await this.get(filter);
-        return response;
+        return {
+            count: response.count,
+            resultList: response.resultList.map(item => new Film(item)),
+        };
     }
 }
 export default FilmService;

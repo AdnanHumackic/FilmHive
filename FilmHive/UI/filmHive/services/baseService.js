@@ -10,7 +10,7 @@ class BaseProvider {
         this.endpoint = endpoint;
     }
 
-    async get({ filter, page, pageSize, orderBy, sortDirection } = {}) {
+    async get({ filter, page, pageSize, orderBy, sortDirection, includeTables } = {}) {
         let url = `${BaseProvider.baseUrl}${this.endpoint}`;
 
         let queryParams = {};
@@ -30,6 +30,9 @@ class BaseProvider {
             queryParams.sortDirection = sortDirection;
         }
 
+        if (includeTables) {
+            queryParams.includeTables = includeTables;
+        }
         if (Object.keys(queryParams).length > 0) {
             const queryString = this.getQueryString(queryParams);
             url = `${url}?${queryString}`;
@@ -40,12 +43,7 @@ class BaseProvider {
             const response = await axios.get(url, { headers });
 
             if (this.isValidResponse(response)) {
-                const data = response.data;
-                const result = {
-                    count: data.count,
-                    resultList: data.resultList.map(item => this.fromJson(item)),
-                };
-                return result;
+                return response.data;
             } else {
                 throw new Error('Unknown error');
             }
@@ -73,7 +71,7 @@ class BaseProvider {
             const response = await axios.post(url, request, { headers });
 
             if (this.isValidResponse(response)) {
-                return this.fromJson(response.data);
+                return response.data;
             } else {
                 throw new Error('Unknown error');
             }
@@ -90,7 +88,7 @@ class BaseProvider {
             const response = await axios.put(url, request, { headers });
 
             if (this.isValidResponse(response)) {
-                return this.fromJson(response.data);
+                return response.data;
             } else {
                 throw new Error('Unknown error');
             }

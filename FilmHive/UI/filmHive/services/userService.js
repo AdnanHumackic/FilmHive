@@ -1,3 +1,4 @@
+import User from '../models/user';
 import BaseProvider from './baseService';
 import axios from 'axios';
 
@@ -5,30 +6,13 @@ class UserService extends BaseProvider {
     constructor() {
         super('User');
     }
-    fromJson(data) {
-        return {
-            userId: data.id,
-            firstName: data.firstName,
-            lastName: data.lastName,
-            username: data.username,
-            email: data.email,
-            phone: data.phone,
-            biography: data.biography,
-            profilePicture: data.profilePicture,
-            profileThumbnail: data.profileThumbnail,
-            dateOfBirth: data.dateOfBirth,
-            isDeleted: data.isDeleted,
-            isActive: data.isActive,
-            timeOfDeletion: data.timeOfDeletion,
-            createdAt: data.createdAt,
-            modifiedAt: data.modifiedAt,
-            modifiedBy: data.modifiedBy,
-            roleId: data.roleId,
-        };
-    }
+
     async getUsers(filter = {}) {
         const response = await this.get(filter);
-        return response;
+        return {
+            count: response.count,
+            resultList: response.resultList.map(item => new User(item)),
+        };
     }
 
     async addUser(user) {
@@ -52,8 +36,7 @@ class UserService extends BaseProvider {
             }
 
             if (this.isValidResponse(response)) {
-                const data = response.data;
-                return this.fromJson(data);
+                return new User(response.data);
             } else {
                 throw new Error("Unknown error.");
             }

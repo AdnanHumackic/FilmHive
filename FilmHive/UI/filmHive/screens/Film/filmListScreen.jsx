@@ -6,11 +6,15 @@ import FilmService from '../../services/filmService';
 export default function FilmListScreen({ navigation }) {
 
     const [films, setFilms] = useState([]);
+    const filter = {
+        isDeleted: false
+    };
 
     const fetchFilms = async () => {
         const filmService = new FilmService();
+
         try {
-            const films = await filmService.getFilms({});
+            const films = await filmService.getFilms({ filter });
             setFilms(films.resultList);
         } catch (error) {
             alert(error.message);
