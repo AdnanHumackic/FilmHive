@@ -54,5 +54,27 @@ namespace filmHive.Services
 
             return query;
         }
+
+        public override async Task AfterInsertAsync(FilmInsertObject request, Film entity, CancellationToken cancellationToken = default)
+        {
+            if (request.Genres != null)
+            {
+                foreach (var genre in request.Genres)
+                {
+                    Context.FilmGenres.Add(new Database.FilmGenre
+                    {
+                        FilmId = entity.FilmId,
+                        GenreId = genre,
+                        IsActive = true,
+                        CreatedAt = DateTime.Now,
+                    });
+
+                    await Context.SaveChangesAsync(cancellationToken);
+                }
+
+
+                await base.AfterInsertAsync(request, entity, cancellationToken);
+            }
+        }
     }
 }

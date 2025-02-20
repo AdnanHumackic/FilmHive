@@ -12,6 +12,7 @@ namespace filmHive.Model.Request
         public byte[]? Poster { get; set; }
         public byte[]? Thumbnail { get; set; }
         public string? TrailerUrl { get; set; }
+        public List<int> Genres { get; set; }
         public DateTime ReleaseYear { get; set; }
         public int Status { get; set; }
         public bool IsActive { get; set; }

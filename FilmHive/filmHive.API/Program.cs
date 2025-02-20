@@ -47,7 +47,12 @@ builder.Services.AddTransient<IRoleService, RoleService>();
 builder.Services.AddTransient<IGenreService, GenreService>();
 builder.Services.AddTransient<IUserService, UserService>();
 builder.Services.AddTransient<IFilmService, FilmService>();
-builder.Services.AddTransient<IFilmReviewService, FilmReviewService>();
+builder.Services.AddTransient<IFilmReviewService, FilmReviewService>(); 
+builder.Services.AddTransient<IFilmRoleService, FilmRoleService>(); 
+builder.Services.AddTransient<IPersonService, PersonService>();
+builder.Services.AddTransient<IFilmPersonRoleService, FilmPersonRoleService>();
+builder.Services.AddTransient<IFilmGenreService, FilmGenreService>();
+builder.Services.AddTransient<IFilmFavoriteService, FilmFavoriteService>();
 
 
 

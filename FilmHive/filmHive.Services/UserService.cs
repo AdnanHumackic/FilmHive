@@ -64,11 +64,6 @@ namespace filmHive.Services
                 query = query.Where(x => x.Username.StartsWith(search.UsernameGTE));
             }
 
-            if (search.IsUserRoleIncluded == true)
-            {
-                query = query.Include(x => x.Role);
-            }
-
             if (search.RoleId != null)
             {
                 query = query.Where(x => x.Role.RoleId == search.RoleId);

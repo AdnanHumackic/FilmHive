@@ -13,7 +13,5 @@ namespace filmHive.Model.SearchObject
         public decimal? GradeLTE { get; set; }
         public DateTime? ReviewDateGTE { get; set; }
         public DateTime? ReviewDateLTE { get; set; }
-        public bool? IsFilmIncluded { get; set; }
-        public bool? IsUserIncluded { get; set; }
     }
 }

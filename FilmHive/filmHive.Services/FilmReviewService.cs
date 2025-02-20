@@ -58,16 +58,6 @@ namespace filmHive.Services
                 query = query.Where(x => x.ReviewDate < search.ReviewDateLTE);
             }
 
-            if (search.IsFilmIncluded == true)
-            {
-                query = query.Include(x => x.Movie);
-            }
-
-            if (search.IsUserIncluded == true)
-            {
-                query = query.Include(x => x.User);
-            }
-
             return query;
         }
 
