@@ -16,6 +16,16 @@ export default function HomeScreen({ navigation }) {
                         />
                     </TouchableOpacity>
                 </View>
+                <View style={styles.imageContainer}>
+                    <TouchableOpacity onPress={() => navigation.navigate('UserProfile')} style={styles.profileBtn}>
+                        {AuthProvider.profilePicture
+                            ? (
+                                <Image style={styles.image}
+                                    source={{ uri: AuthProvider.profilePicture }}
+                                />)
+                            : (<Image style={styles.image} source={require('../assets/defaultUser.png')} />)}
+                    </TouchableOpacity>
+                </View>
                 <Text style={styles.text}>Hello, <Text style={styles.username}>{AuthProvider.username}</Text></Text>
                 <Text style={styles.greetingText}>Review or track film you’ve watched...</Text>
             </ScrollView>
@@ -67,6 +77,29 @@ const styles = StyleSheet.create({
         borderRadius: 30,
         backgroundColor: '#E9A6A6',
         padding: 10,
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
+    imageContainer: {
+        position: 'absolute',
+        top: 40,
+        right: 20,
+        zIndex: 1,
+        borderRadius: 30,
+        backgroundColor: '#E9A6A6',
+        padding: 10,
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
+    image: {
+        width: 50,
+        height: 50,
+        borderRadius: 30,
+    },
+    profileBtn: {
+        width: 30,
+        height: 30,
+        borderRadius: 20,
         alignItems: 'center',
         justifyContent: 'center',
     },

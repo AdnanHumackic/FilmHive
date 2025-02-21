@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, Image, ScrollView, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, Image, ScrollView, TouchableOpacity, Linking } from 'react-native';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { Ionicons } from '@expo/vector-icons';
 import React, { useState, useEffect } from 'react';
@@ -22,6 +22,7 @@ export default function FilmDetailsScreen({ navigation }) {
     const userReview = reviews.find(review => review.userId === AuthProvider.userId);
     const [localReview, setLocalReview] = useState(userReview ? userReview.comment : '');
     const [localRating, setLocalRating] = useState(userReview ? userReview.grade : rating);
+    const filteredReviews = reviews?.filter(review => review.comment && review.comment.length > 0);
 
 
     const fetchReviews = async () => {
@@ -124,6 +125,12 @@ export default function FilmDetailsScreen({ navigation }) {
                                 <Text style={styles.duration}>  {film.duration} mins</Text>
                             </Text>
                         </Text>
+                        {film && film.trailerUrl
+                            ? (
+                                <Text
+                                    style={styles.trailer}
+                                    onPress={() => Linking.openURL(film.trailerUrl)}
+                                >TRAILER</Text>) : (<Text style={styles.trailer}>NO TRAILER</Text>)}
                         <ScrollView>
                             <Text style={styles.description}>{film.description}</Text>
                         </ScrollView>
@@ -196,17 +203,17 @@ export default function FilmDetailsScreen({ navigation }) {
                         <Text style={styles.buttonText}>Add to Watchlist</Text>
                     </TouchableOpacity>
                 </View >
-                {reviews && reviews.length != 0 && (
-                    <View style={styles.reviewHeaderContainer}>
-                        <Text style={styles.reviewTitle}>All reviews</Text>
-                        <Text style={styles.seeAll}>See all</Text>
-                    </View>
-                )}
-                <View style={styles.separator} />
-                {reviews && reviews.length > 0 ? (
-                    reviews
-                        .filter(review => review.comment && review.comment.length > 0)
-                        .map((review, index) => (
+
+                {filteredReviews && filteredReviews.length > 0 ? (
+                    <>
+                        <View style={styles.reviewHeaderContainer}>
+                            <Text style={styles.reviewTitle}>All reviews</Text>
+                            <Text style={styles.seeAll}>See all</Text>
+                        </View>
+
+                        <View style={styles.separator} />
+
+                        {filteredReviews.map((review, index) => (
                             <View key={index} style={styles.reviewContainer}>
                                 <View style={styles.reviewContainer}>
                                     <View style={styles.reviewHeader}>
@@ -220,7 +227,6 @@ export default function FilmDetailsScreen({ navigation }) {
                                                 <Text style={styles.stars}>
                                                     {"⭐".repeat(Math.round(review.grade))}
                                                 </Text>
-                                                <Text style={styles.reviewCount}></Text>
                                             </View>
                                         </View>
                                     </View>
@@ -228,12 +234,13 @@ export default function FilmDetailsScreen({ navigation }) {
                                     <Text style={styles.reviewText}>
                                         {review.comment.length > 100 ? review.comment.substring(0, 100) + "..." : review.comment}
                                     </Text>
-                                    {(review.comment && review.comment.length > 100) && (
+                                    {review.comment.length > 100 && (
                                         <Text style={styles.readMore}>Read more ➤</Text>
                                     )}
                                 </View>
                             </View>
-                        ))
+                        ))}
+                    </>
                 ) : (
                     <Text style={styles.noReviews}>This film has no reviews.</Text>
                 )}
@@ -391,7 +398,12 @@ const styles = StyleSheet.create({
         marginRight: 20,
         marginBottom: 10,
     },
-
+    trailer: {
+        color: '#E9A6A6',
+        fontSize: 15,
+        fontWeight: 'bold',
+        marginRight: 20,
+    },
     reviewContainer: {
         backgroundColor: '#2D2D42',
         borderRadius: 20,
