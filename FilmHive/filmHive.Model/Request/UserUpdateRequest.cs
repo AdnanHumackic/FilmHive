@@ -12,11 +12,10 @@ namespace filmHive.Model.Request
         public string Phone { get; set; } = null!;
         public string Username { get; set; } = null!;
         public string? Biography { get; set; }
-        public string NewPassword { get; set; }
-        public string PasswordConfirmation { get; set; }
+        public string? NewPassword { get; set; }
+        public string? PasswordConfirmation { get; set; }
         public byte[]? ProfilePicture { get; set; }
         public byte[]? ProfileThumbnail { get; set; }
-        public DateTime DateOfBirth { get; set; }
         public bool IsDeleted { get; set; }
         public bool IsActive { get; set; }
       

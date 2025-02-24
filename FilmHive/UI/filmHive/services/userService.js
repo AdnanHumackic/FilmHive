@@ -20,6 +20,10 @@ class UserService extends BaseProvider {
         return response;
     }
 
+    async updateUser(id, user) {
+        const response = await this.update(id, user);
+        return response;
+    }
     async login(username, password) {
         const url = `${BaseProvider.baseUrl}User/login?username=${username}&password=${password}`;
         const headers = this.createHeaders();
