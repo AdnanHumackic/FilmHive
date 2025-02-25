@@ -16,5 +16,7 @@ namespace filmHive.Model.Request
         public int Status { get; set; }
         public bool IsActive { get; set; }
         public bool IsDeleted { get; set; }
+        public int? ModifiedBy { get; set; }
+        public DateTime? ModifiedAt { get; set; }
     }
 }

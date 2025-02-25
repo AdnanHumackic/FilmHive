@@ -7,12 +7,19 @@ import { Formik } from 'formik';
 import CustomInput from '../../components/reusableInput';
 import UserService from '../../services/userService';
 import CheckBox from 'react-native-check-box'
+import Utils from '../../services/utils';
 
 
 export default function UserProfileEditScreen({ navigation }) {
 
     const [users, setUsers] = useState(null);
     const [isChecked, setIsChecked] = useState(false);
+
+    const [imageUri, setImageUri] = useState(null);
+    const [base64Image, setBase64Image] = useState(AuthProvider.profilePicture || null);
+
+    const [thumbnailImageUri, setThumbnailImageUri] = useState(null);
+    const [base64ThumbnailImage, setBase64ThumbnailImage] = useState(AuthProvider.profileThumbnail || null);
     const userService = new UserService();
 
     const fetchUser = async () => {
@@ -30,6 +37,15 @@ export default function UserProfileEditScreen({ navigation }) {
         fetchUser();
     }, []);
 
+    useEffect(() => {
+        if (AuthProvider.profilePicture) {
+            setBase64Image(AuthProvider.profilePicture);
+        }
+        if (AuthProvider.profileThumbnail) {
+
+            setBase64ThumbnailImage(AuthProvider.profileThumbnail);
+        }
+    }, []);
     const getValidationSchema = (users) => yup.object().shape({
         firstName: yup.string()
             .matches(/^[A-Z][a-zA-Z]*$/, 'First name must start with a capital letter.')
@@ -98,17 +114,34 @@ export default function UserProfileEditScreen({ navigation }) {
                 </View>
                 <Image
                     style={styles.thumbnail}
-                    source={AuthProvider.thumbnail ? { uri: AuthProvider.thumbnail } : require('../../assets/noThumbnail.png')}
+                    source={
+                        thumbnailImageUri
+                            ? { uri: thumbnailImageUri }
+                            : base64ThumbnailImage
+                                ? { uri: Utils.base64ToImageUri(base64ThumbnailImage) }
+                                : require('../../assets/noThumbnail.png')
+                    }
                 />
+                <TouchableOpacity style={styles.uploadThumbnailPicture} onPress={Utils.pickImage.bind(this, setThumbnailImageUri, setBase64ThumbnailImage)}>
+                    <Ionicons name="arrow-up-circle-outline" size={22} color="white" />
+                </TouchableOpacity>
                 <View style={styles.profileImageContainer}>
                     <Image
                         style={styles.image}
-                        source={AuthProvider.profilePicture ? { uri: AuthProvider.profilePicture } : require('../../assets/defaultUser.png')}
+                        source={
+                            imageUri
+                                ? { uri: imageUri }
+                                : base64Image
+                                    ? { uri: Utils.base64ToImageUri(base64Image) }
+                                    : require('../../assets/defaultUser.png')
+                        }
                     />
-                    <TouchableOpacity style={styles.editIconContainer} onPress={() => console.log('imgUpload')}>
+                    <TouchableOpacity style={styles.uploadProfilePicture} onPress={Utils.pickImage.bind(this, setImageUri, setBase64Image)}>
                         <Ionicons name="arrow-up-circle-outline" size={22} color="white" />
                     </TouchableOpacity>
+
                 </View>
+
                 <Formik
                     initialValues={{
                         firstName: AuthProvider.firstName,
@@ -132,6 +165,8 @@ export default function UserProfileEditScreen({ navigation }) {
                                 username: values.username,
                                 isDeleted: false,
                                 isActive: true,
+                                profilePicture: base64Image,
+                                profileThumbnail: base64ThumbnailImage,
                                 ...(values.isChecked && values.newPassword ? { newPassword: values.newPassword, passwordConfirmation: values.passwordConfirmation } : {})
                             };
                             await userService.updateUser(AuthProvider.userId, updatedValues);
@@ -162,6 +197,7 @@ export default function UserProfileEditScreen({ navigation }) {
                 >
                     {({ handleChange, handleBlur, handleSubmit, setFieldValue, touched, values, errors }) => (
                         <View style={{ width: '80%', }}>
+
                             <CustomInput
                                 label="First Name"
                                 placeholder="Enter your first name"
@@ -323,11 +359,11 @@ const styles = StyleSheet.create({
         marginRight: 15,
         marginBottom: 10,
     },
-    editIconContainer: {
+    uploadProfilePicture: {
         position: 'absolute',
         top: 5,
         right: 40,
-        backgroundColor: '#1F1D36',
+        backgroundColor: '#E9A6A6',
         borderRadius: 15,
         padding: 4,
     },
@@ -355,4 +391,12 @@ const styles = StyleSheet.create({
         color: "#E9A6A6",
         fontWeight: "500",
     },
+    uploadThumbnailPicture: {
+        position: 'absolute',
+        top: 165,
+        right: 30,
+        backgroundColor: '#E9A6A6',
+        borderRadius: 15,
+        padding: 4,
+    }
 });

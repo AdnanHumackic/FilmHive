@@ -2,6 +2,7 @@ import React from 'react';
 import { View, Text, Button, StyleSheet, Image, TouchableOpacity, ScrollView } from 'react-native';
 import AuthProvider from '../services/authProvider';
 import { Ionicons } from '@expo/vector-icons';
+import Utils from '../services/utils';
 
 export default function HomeScreen({ navigation }) {
     return (
@@ -18,12 +19,14 @@ export default function HomeScreen({ navigation }) {
                 </View>
                 <View style={styles.imageContainer}>
                     <TouchableOpacity onPress={() => navigation.navigate('UserProfile')} style={styles.profileBtn}>
-                        {AuthProvider.profilePicture
-                            ? (
-                                <Image style={styles.image}
-                                    source={{ uri: AuthProvider.profilePicture }}
-                                />)
-                            : (<Image style={styles.image} source={require('../assets/defaultUser.png')} />)}
+                        <Image
+                            style={styles.image}
+                            source={
+                                AuthProvider.profilePicture
+                                    ? { uri: Utils.base64ToImageUri(AuthProvider.profilePicture) }
+                                    : require('../assets/defaultUser.png')
+                            }
+                        />
                     </TouchableOpacity>
                 </View>
                 <Text style={styles.text}>Hello, <Text style={styles.username}>{AuthProvider.username}</Text></Text>

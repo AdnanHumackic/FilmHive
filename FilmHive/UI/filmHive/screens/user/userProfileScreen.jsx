@@ -2,6 +2,7 @@ import React from 'react';
 import { View, Text, Button, StyleSheet, Image, TouchableOpacity, ScrollView } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import AuthProvider from '../../services/authProvider';
+import Utils from '../../services/utils';
 
 export default function UserProfileScreen({ navigation }) {
     return (
@@ -18,12 +19,16 @@ export default function UserProfileScreen({ navigation }) {
             </View>
             <Image
                 style={styles.thumbnail}
-                source={AuthProvider.thumbnail ? { uri: AuthProvider.thumbnail } : require('../../assets/noThumbnail.png')}
+                source={AuthProvider.profileThumbnail ? { uri: Utils.base64ToImageUri(AuthProvider.profileThumbnail) } : require('../../assets/noThumbnail.png')}
             />
             <View style={styles.profileImageContainer}>
                 <Image
                     style={styles.image}
-                    source={AuthProvider.profilePicture ? { uri: AuthProvider.profilePicture } : require('../../assets/defaultUser.png')}
+                    source={
+                        AuthProvider.profilePicture
+                            ? { uri: Utils.base64ToImageUri(AuthProvider.profilePicture) }
+                            : require('../../assets/defaultUser.png')
+                    }
                 />
                 <TouchableOpacity style={styles.editIconContainer} onPress={() => navigation.navigate('UserProfileEdit')}>
                     <Ionicons name="create-outline" size={22} color="white" />

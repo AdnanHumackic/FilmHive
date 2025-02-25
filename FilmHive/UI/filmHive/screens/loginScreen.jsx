@@ -1,5 +1,5 @@
 import React from 'react';
-import { Image, TouchableOpacity, Text, View, StyleSheet } from 'react-native';
+import { Image, TouchableOpacity, Text, View, StyleSheet, ScrollView } from 'react-native';
 import * as yup from 'yup';
 import { Formik } from 'formik';
 import UserService from '../services/userService';
@@ -51,59 +51,65 @@ export default function LoginScreen() {
 
     return (
         <View style={styles.safeArea}>
-            <Image source={require('../assets/banner.png')} style={styles.banner}></Image>
-            <View style={styles.container}>
-                <Formik
-                    validationSchema={validationSchema}
-                    initialValues={{ username: '', password: '' }}
-                    onSubmit={login}
-                >
-                    {({ handleChange, handleBlur, handleSubmit, values, errors, touched }) => (
-                        <View style={{ width: '70%' }}>
-                            <Text style={styles.loginText}>Login</Text>
-                            <Text style={styles.loginTextBeneath}>Please sign in to continue.</Text>
+            <ScrollView contentContainerStyle={styles.scrollViewContent}>
 
-                            <CustomInput
-                                iconName="person-circle-outline"
-                                placeholder="Username"
-                                value={values.username}
-                                onChangeText={handleChange('username')}
-                                onBlur={handleBlur('username')}
-                                error={errors.username}
-                                touched={touched.username}
-                            />
+                <Image source={require('../assets/banner.png')} style={styles.banner}></Image>
+                <View style={styles.container}>
+                    <Formik
+                        validationSchema={validationSchema}
+                        initialValues={{ username: '', password: '' }}
+                        onSubmit={login}
+                    >
+                        {({ handleChange, handleBlur, handleSubmit, values, errors, touched }) => (
+                            <View style={{ width: '70%' }}>
+                                <Text style={styles.loginText}>Login</Text>
+                                <Text style={styles.loginTextBeneath}>Please sign in to continue.</Text>
 
-                            <CustomInput
-                                iconName="lock-closed-outline"
-                                placeholder="Password"
-                                value={values.password}
-                                onChangeText={handleChange('password')}
-                                onBlur={handleBlur('password')}
-                                error={errors.password}
-                                touched={touched.password}
-                                secureTextEntry={true}
-                            />
+                                <CustomInput
+                                    iconName="person-circle-outline"
+                                    placeholder="Username"
+                                    value={values.username}
+                                    onChangeText={handleChange('username')}
+                                    onBlur={handleBlur('username')}
+                                    error={errors.username}
+                                    touched={touched.username}
+                                />
 
-                            <View style={styles.buttonContainer}>
-                                <TouchableOpacity style={styles.button} onPress={handleSubmit}>
-                                    <Text style={styles.buttonText}>Login</Text>
+                                <CustomInput
+                                    iconName="lock-closed-outline"
+                                    placeholder="Password"
+                                    value={values.password}
+                                    onChangeText={handleChange('password')}
+                                    onBlur={handleBlur('password')}
+                                    error={errors.password}
+                                    touched={touched.password}
+                                    secureTextEntry={true}
+                                />
+
+                                <View style={styles.buttonContainer}>
+                                    <TouchableOpacity style={styles.button} onPress={handleSubmit}>
+                                        <Text style={styles.buttonText}>Login</Text>
+                                    </TouchableOpacity>
+                                </View>
+
+                                <TouchableOpacity onPress={() => navigation.navigate('SignUp')}>
+                                    <Text style={styles.signUpText}>
+                                        Don't have an account? <Text style={styles.signUpLink}>Sign up</Text>
+                                    </Text>
                                 </TouchableOpacity>
                             </View>
-
-                            <TouchableOpacity onPress={() => navigation.navigate('SignUp')}>
-                                <Text style={styles.signUpText}>
-                                    Don't have an account? <Text style={styles.signUpLink}>Sign up</Text>
-                                </Text>
-                            </TouchableOpacity>
-                        </View>
-                    )}
-                </Formik>
-            </View >
+                        )}
+                    </Formik>
+                </View >
+            </ScrollView>
         </View >
     );
 }
 
 const styles = StyleSheet.create({
+    scrollViewContent: {
+        paddingVertical: 20,
+    },
     loginText: {
         color: 'white',
         fontSize: 24,
@@ -125,7 +131,7 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
-        marginTop: 150,
+        marginTop: 250,
     },
     buttonContainer: {
         marginTop: 20,

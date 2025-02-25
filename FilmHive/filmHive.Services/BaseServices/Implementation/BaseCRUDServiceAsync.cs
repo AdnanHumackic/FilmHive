@@ -54,7 +54,7 @@ namespace filmHive.Services.BaseServices.Implementation
             if (entity is IModified modifiedEntity)
             {
                 modifiedEntity.ModifiedAt = DateTime.Now;
-                if (modifiedEntity.ModifiedAt == null)
+                if (modifiedEntity.ModifiedBy == null)
                 {
                     modifiedEntity.ModifiedBy=CurrentUserService.GetActiveUserId();
                 }
