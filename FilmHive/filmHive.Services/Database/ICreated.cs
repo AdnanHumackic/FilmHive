@@ -8,6 +8,6 @@ namespace filmHive.Services.Database
 {
     internal interface ICreated
     {
-        public DateTime CreatedAt { get; set; }
+        public DateTime? CreatedAt { get; set; }
     }
 }

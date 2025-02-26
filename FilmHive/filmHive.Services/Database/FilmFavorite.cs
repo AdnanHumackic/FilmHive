@@ -19,7 +19,7 @@ public partial class FilmFavorite:ISoftDelete, ICreated, IModified
 
     public DateTime? TimeOfDeletion { get; set; }
 
-    public DateTime CreatedAt { get; set; }
+    public DateTime? CreatedAt { get; set; }
 
     public DateTime? ModifiedAt { get; set; }
 

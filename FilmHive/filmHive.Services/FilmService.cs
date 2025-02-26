@@ -71,10 +71,8 @@ namespace filmHive.Services
 
                     await Context.SaveChangesAsync(cancellationToken);
                 }
-
-
-                await base.AfterInsertAsync(request, entity, cancellationToken);
             }
+            await base.AfterInsertAsync(request, entity, cancellationToken);
         }
     }
 }
