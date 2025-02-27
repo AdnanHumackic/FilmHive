@@ -8,6 +8,7 @@ import FilmDetailsScreen from './screens/film/filmDetailsScreen';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import UserProfileScreen from './screens/user/userProfileScreen';
 import UserProfileEditScreen from './screens/user/userProfileEditScreen';
+import FilmReviewDetailsScreen from './screens/film/filmReviewDetailsScreen';
 
 const Stack = createNativeStackNavigator();
 
@@ -46,6 +47,11 @@ export default function App() {
           <Stack.Screen
             name="UserProfileEdit"
             component={UserProfileEditScreen}
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen
+            name="ReviewDetails"
+            component={FilmReviewDetailsScreen}
             options={{ headerShown: false }}
           />
         </Stack.Navigator>

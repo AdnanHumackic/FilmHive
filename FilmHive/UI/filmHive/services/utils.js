@@ -6,6 +6,11 @@ class Utils {
         return new Date(year).getFullYear();
     }
 
+    static formatDate(date) {
+       date=new Date(date);
+       return `${date.getDate()}.${date.getMonth() + 1}.${date.getFullYear()}`;
+    }
+    
     static async pickImage(setImageUri, setBase64Image) {
         const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
         if (status !== 'granted') {
@@ -32,6 +37,7 @@ class Utils {
     static base64ToImageUri(base64String) {
         return base64String ? `data:image/png;base64,${base64String}` : null;
     }
+    
 }
 
 export default Utils;
