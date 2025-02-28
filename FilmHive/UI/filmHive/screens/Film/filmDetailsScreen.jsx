@@ -9,13 +9,14 @@ import {
 } from "react-native";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import { Ionicons } from "@expo/vector-icons";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import CustomBottomSheet from "../../components/bottomSheet";
 import StarRating from "react-native-star-rating-widget";
 import { TextInput } from "react-native-gesture-handler";
 import FilmReviewService from "../../services/filmReviewService";
 import AuthProvider from "../../services/authProvider";
 import Utils from "../../services/utils";
+import FilmFavoriteService from "../../services/filmFavoriteService";
 
 export default function FilmDetailsScreen({ navigation }) {
   const route = useRoute();
@@ -26,7 +27,11 @@ export default function FilmDetailsScreen({ navigation }) {
   const [rating, setRating] = useState(0);
   const [review, setReview] = useState("");
   const [reviews, setReviews] = useState([]);
+  const [favorite, setFavorite] = useState(false);
+  const [isFavorite, setIsFavorite] = useState(false);
+  [];
   const filmReviewService = new FilmReviewService();
+  const filmFavoriteService = new FilmFavoriteService();
   const userReview = reviews.find(
     (review) => review.userId === AuthProvider.userId
   );
@@ -53,6 +58,68 @@ export default function FilmDetailsScreen({ navigation }) {
       alert(error.message);
     }
   };
+  useEffect(() => {
+    const fetchFavoriteStatus = async () => {
+      try {
+        const filter = {
+          movieId: film.filmId,
+          userId: AuthProvider.userId,
+          isDeleted: false,
+        };
+
+        const favorites = await filmFavoriteService.getFilmFavorites({
+          filter,
+        });
+
+        setIsFavorite(favorites.resultList.some((fav) => fav.isActive));
+      } catch (error) {
+        console.error("Error fetching favorite status:", error);
+      }
+    };
+
+    fetchFavoriteStatus();
+  }, [film.filmId]);
+
+  const toggleFavorite = useCallback(async () => {
+    try {
+      const filter = {
+        movieId: film.filmId,
+        userId: AuthProvider.userId,
+      };
+
+      const favorites = await filmFavoriteService.getFilmFavorites({ filter });
+
+      if (favorites.resultList.length > 0) {
+        const existingFavorite = favorites.resultList[0];
+        const isCurrentlyActive = existingFavorite.isActive;
+
+        const updReq = {
+          isActive: !isCurrentlyActive,
+          isDeleted: isCurrentlyActive,
+          userId: AuthProvider.userId,
+          movieId: film.filmId,
+        };
+
+        await filmFavoriteService.updateFilmFavorite(
+          existingFavorite.filmFavoriteId,
+          updReq
+        );
+        setIsFavorite(!isCurrentlyActive);
+      } else {
+        const newFavorite = {
+          movieId: film.filmId,
+          userId: AuthProvider.userId,
+          isActive: true,
+          isDeleted: false,
+        };
+
+        await filmFavoriteService.addFilmFavorite(newFavorite);
+        setIsFavorite(true);
+      }
+    } catch (error) {
+      alert(error.message);
+    }
+  }, [film.filmId]);
 
   async function saveReview() {
     try {
@@ -213,11 +280,16 @@ export default function FilmDetailsScreen({ navigation }) {
                     fillColor="white"
                     onChange={setLocalRating}
                   />
+
                   <TouchableOpacity
                     onPress={() => toggleFavorite(film)}
                     style={{ marginLeft: 10 }}
                   >
-                    <Ionicons name="heart-outline" size={28} color="white" />
+                    <Ionicons
+                      name={isFavorite ? "heart" : "heart-outline"}
+                      size={28}
+                      color={isFavorite ? "red" : "white"}
+                    />
                   </TouchableOpacity>
                 </View>
               </View>

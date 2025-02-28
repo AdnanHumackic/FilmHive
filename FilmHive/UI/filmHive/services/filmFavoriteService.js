@@ -23,5 +23,10 @@ class FilmFavoriteService extends BaseProvider {
         const response = await this.update(id, filmFavorite);
         return response;
     }
+
+    async deleteFilmFavorite(id) {
+        const response = await this.delete(id);
+        return response;
+    }
 }
 export default FilmFavoriteService;
