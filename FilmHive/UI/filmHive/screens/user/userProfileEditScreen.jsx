@@ -196,7 +196,7 @@ export default function UserProfileEditScreen({ navigation }) {
           validationSchema={getValidationSchema(users)}
           onSubmit={async (values) => {
             try {
-              const updatedValues = {
+              const userUpdate = {
                 firstName: values.firstName,
                 lastName: values.lastName,
                 email: values.email,
@@ -213,7 +213,7 @@ export default function UserProfileEditScreen({ navigation }) {
                     }
                   : {}),
               };
-              await userService.updateUser(AuthProvider.userId, updatedValues);
+              await userService.updateUser(AuthProvider.userId, userUpdate);
               AuthProvider.username = values.username;
               AuthProvider.firstName = values.firstName;
               AuthProvider.lastName = values.lastName;

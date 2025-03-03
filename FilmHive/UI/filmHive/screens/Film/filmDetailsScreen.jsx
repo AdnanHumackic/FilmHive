@@ -7,40 +7,20 @@ import {
   TouchableOpacity,
   Linking,
 } from "react-native";
-import { useNavigation, useRoute } from "@react-navigation/native";
+import { useRoute } from "@react-navigation/native";
 import { Ionicons } from "@expo/vector-icons";
-import React, { useState, useEffect, useCallback } from "react";
-import CustomBottomSheet from "../../components/bottomSheet";
-import StarRating from "react-native-star-rating-widget";
-import { TextInput } from "react-native-gesture-handler";
+import React, { useState, useEffect } from "react";
 import FilmReviewService from "../../services/filmReviewService";
 import AuthProvider from "../../services/authProvider";
 import Utils from "../../services/utils";
-import FilmFavoriteService from "../../services/filmFavoriteService";
 
 export default function FilmDetailsScreen({ navigation }) {
   const route = useRoute();
   const { film } = route.params;
-  const [isVisible, setIsVisible] = useState(false);
-  const openBottomSheet = () => setIsVisible(true);
-  const closeBottomSheet = () => setIsVisible(false);
-  const [rating, setRating] = useState(0);
-  const [review, setReview] = useState("");
   const [reviews, setReviews] = useState([]);
-  const [favorite, setFavorite] = useState(false);
-  const [isFavorite, setIsFavorite] = useState(false);
   [];
+
   const filmReviewService = new FilmReviewService();
-  const filmFavoriteService = new FilmFavoriteService();
-  const userReview = reviews.find(
-    (review) => review.userId === AuthProvider.userId
-  );
-  const [localReview, setLocalReview] = useState(
-    userReview ? userReview.comment : ""
-  );
-  const [localRating, setLocalRating] = useState(
-    userReview ? userReview.grade : rating
-  );
   const filteredReviews = reviews?.filter(
     (review) => review.comment && review.comment.length > 0
   );
@@ -58,110 +38,6 @@ export default function FilmDetailsScreen({ navigation }) {
       alert(error.message);
     }
   };
-  useEffect(() => {
-    const fetchFavoriteStatus = async () => {
-      try {
-        const filter = {
-          movieId: film.filmId,
-          userId: AuthProvider.userId,
-          isDeleted: false,
-        };
-
-        const favorites = await filmFavoriteService.getFilmFavorites({
-          filter,
-        });
-
-        setIsFavorite(favorites.resultList.some((fav) => fav.isActive));
-      } catch (error) {
-        console.error("Error fetching favorite status:", error);
-      }
-    };
-
-    fetchFavoriteStatus();
-  }, [film.filmId]);
-
-  const toggleFavorite = useCallback(async () => {
-    try {
-      const filter = {
-        movieId: film.filmId,
-        userId: AuthProvider.userId,
-      };
-
-      const favorites = await filmFavoriteService.getFilmFavorites({ filter });
-
-      if (favorites.resultList.length > 0) {
-        const existingFavorite = favorites.resultList[0];
-        const isCurrentlyActive = existingFavorite.isActive;
-
-        const updReq = {
-          isActive: !isCurrentlyActive,
-          isDeleted: isCurrentlyActive,
-          userId: AuthProvider.userId,
-          movieId: film.filmId,
-        };
-
-        await filmFavoriteService.updateFilmFavorite(
-          existingFavorite.filmFavoriteId,
-          updReq
-        );
-        setIsFavorite(!isCurrentlyActive);
-      } else {
-        const newFavorite = {
-          movieId: film.filmId,
-          userId: AuthProvider.userId,
-          isActive: true,
-          isDeleted: false,
-        };
-
-        await filmFavoriteService.addFilmFavorite(newFavorite);
-        setIsFavorite(true);
-      }
-    } catch (error) {
-      alert(error.message);
-    }
-  }, [film.filmId]);
-
-  async function saveReview() {
-    try {
-      const reviewsIns = {
-        userId: AuthProvider.userId,
-        movieId: film.filmId,
-        grade: localRating,
-        comment: localReview,
-        reviewDate: new Date(),
-        isActive: true,
-      };
-      const exists = await reviewExists();
-      if (exists) {
-        const reviewUpd = {
-          userId: AuthProvider.userId,
-          movieId: film.filmId,
-          grade: localRating,
-          comment: localReview,
-          reviewDate: new Date(),
-          isActive: true,
-          isDeleted: false,
-        };
-        await filmReviewService.updateReview(
-          userReview.filmReviewId,
-          reviewUpd
-        );
-        await fetchReviews();
-        alert("Review updated successfully.");
-        return;
-      } else {
-        await filmReviewService.addReview(reviewsIns);
-        alert("Review added successfully.");
-        await fetchReviews();
-
-        setReview("");
-        setRating(0);
-        return;
-      }
-    } catch (error) {
-      alert(error.message);
-    }
-  }
 
   async function reviewExists() {
     try {
@@ -180,13 +56,6 @@ export default function FilmDetailsScreen({ navigation }) {
   useEffect(() => {
     fetchReviews();
   }, []);
-
-  useEffect(() => {
-    if (userReview) {
-      setLocalReview(userReview.comment);
-      setLocalRating(userReview.grade);
-    }
-  }, [userReview]);
 
   return (
     <View style={styles.container}>
@@ -241,7 +110,21 @@ export default function FilmDetailsScreen({ navigation }) {
           </TouchableOpacity>
         </View>
         <View style={styles.buttonContainer}>
-          <TouchableOpacity style={styles.button} onPress={openBottomSheet}>
+          <TouchableOpacity
+            style={styles.button}
+            onPress={async () => {
+              try {
+                const exists = await reviewExists();
+                if (exists) {
+                  navigation.navigate("UpdateFilmReview", { film });
+                } else {
+                  navigation.navigate("AddFilmReview", { film });
+                }
+              } catch (error) {
+                alert(error.message);
+              }
+            }}
+          >
             <Ionicons
               name="star-outline"
               size={20}
@@ -250,81 +133,6 @@ export default function FilmDetailsScreen({ navigation }) {
             />
             <Text style={styles.buttonText}>Rate or Review</Text>
           </TouchableOpacity>
-          <CustomBottomSheet
-            isVisible={isVisible}
-            onClose={closeBottomSheet}
-            title="Rate or Review"
-          >
-            <View>
-              <Text style={styles.titleModal}>
-                {film.title}
-                <Text style={styles.releaseYear}>
-                  {" "}
-                  {Utils.getYear(film.releaseYear)}
-                </Text>
-              </Text>
-              <View style={{ alignItems: "center" }}>
-                <View
-                  style={{
-                    flexDirection: "row",
-                    alignItems: "center",
-                    justifyContent: "center",
-                  }}
-                >
-                  <StarRating
-                    rating={localRating}
-                    starSize={30}
-                    starSpacing={2}
-                    starColor="white"
-                    emptyStarColor="white"
-                    fillColor="white"
-                    onChange={setLocalRating}
-                  />
-
-                  <TouchableOpacity
-                    onPress={() => toggleFavorite(film)}
-                    style={{ marginLeft: 10 }}
-                  >
-                    <Ionicons
-                      name={isFavorite ? "heart" : "heart-outline"}
-                      size={28}
-                      color={isFavorite ? "red" : "white"}
-                    />
-                  </TouchableOpacity>
-                </View>
-              </View>
-              <TextInput
-                style={styles.textArea}
-                placeholder="Write your review..."
-                placeholderTextColor="grey"
-                multiline={true}
-                numberOfLines={20}
-                value={localReview}
-                onChangeText={setLocalReview}
-              />
-            </View>
-            {localRating === 0 && localReview === "" ? (
-              <View style={{ alignItems: "center" }}>
-                <Ionicons
-                  name="star-outline"
-                  size={20}
-                  color="white"
-                  style={styles.icon}
-                />
-                <Text style={styles.buttonText}>Rate or Review</Text>
-              </View>
-            ) : (
-              <TouchableOpacity style={styles.modalButton} onPress={saveReview}>
-                <Ionicons
-                  name="save-outline"
-                  size={20}
-                  color="white"
-                  style={styles.icon}
-                />
-                <Text style={styles.buttonText}>Add review</Text>
-              </TouchableOpacity>
-            )}
-          </CustomBottomSheet>
           <TouchableOpacity
             style={styles.button}
             onPress={() => console.log("y")}
@@ -511,31 +319,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
   },
-  titleModal: {
-    fontSize: 20,
-    color: "white",
-    fontWeight: "bold",
-    marginBottom: 10,
-    textAlign: "center",
-  },
-  textArea: {
-    borderColor: "gray",
-    borderWidth: 1,
-    borderRadius: 5,
-    padding: 10,
-    marginTop: 10,
-    color: "white",
-    textAlignVertical: "top",
-  },
-  modalButton: {
-    flexDirection: "row",
-    alignItems: "center",
-    backgroundColor: "#E9A6A6",
-    paddingVertical: 10,
-    paddingHorizontal: 15,
-    borderRadius: 10,
-    marginTop: 10,
-  },
+
   separator: {
     height: 1,
     backgroundColor: "gray",
