@@ -13,14 +13,17 @@ import React, { useState, useEffect } from "react";
 import FilmReviewService from "../../services/filmReviewService";
 import AuthProvider from "../../services/authProvider";
 import Utils from "../../services/utils";
+import FilmFavoriteService from "../../services/filmFavoriteService";
 
 export default function FilmDetailsScreen({ navigation }) {
   const route = useRoute();
   const { film } = route.params;
   const [reviews, setReviews] = useState([]);
   [];
-
+  const [numberOfReviews, setNumberOfReviews] = useState(0);
+  const [numberOfFavorites, setNumberOfFavorites] = useState(0);
   const filmReviewService = new FilmReviewService();
+  const filmFavoriteService = new FilmFavoriteService();
   const filteredReviews = reviews?.filter(
     (review) => review.comment && review.comment.length > 0
   );
@@ -39,6 +42,27 @@ export default function FilmDetailsScreen({ navigation }) {
     }
   };
 
+  async function fetchNumberOfReviews() {
+    try {
+      const numberOfReviews = await filmReviewService.countUsersWhoReviewedFilm(
+        film.filmId
+      );
+      setNumberOfReviews(numberOfReviews);
+    } catch (error) {
+      alert(error.message);
+    }
+  }
+
+  async function fetchNumberOfFavorites() {
+    try {
+      const numberOfFavorites =
+        await filmFavoriteService.countUsersWhoFavoritedFilm(film.filmId);
+      setNumberOfFavorites(numberOfFavorites);
+    } catch (error) {
+      alert(error.message);
+    }
+  }
+
   async function reviewExists() {
     try {
       const filter = {
@@ -55,6 +79,8 @@ export default function FilmDetailsScreen({ navigation }) {
 
   useEffect(() => {
     fetchReviews();
+    fetchNumberOfReviews();
+    fetchNumberOfFavorites();
   }, []);
 
   return (
@@ -69,14 +95,38 @@ export default function FilmDetailsScreen({ navigation }) {
           }
         />
         <View style={styles.posterAndDetails}>
-          <Image
-            style={styles.poster}
-            source={
-              film.poster
-                ? { uri: film.poster }
-                : require("../../assets/noPoster.jpg")
-            }
-          />
+          <View style={{ alignItems: "center" }}>
+            <Text> </Text>
+            <Image
+              style={styles.poster}
+              source={
+                film.poster
+                  ? { uri: film.poster }
+                  : require("../../assets/noPoster.jpg")
+              }
+            />
+            <View style={styles.iconsContainer}>
+              <Ionicons
+                name="eye-sharp"
+                size={24}
+                color="#00AA44"
+                style={styles.posterIcon}
+              />
+              <Ionicons
+                name="heart"
+                size={24}
+                color="#EC2626"
+                style={styles.posterIcon}
+              />
+              <Ionicons
+                name="chatbubbles"
+                size={24}
+                color="#088DD8"
+                style={styles.posterIcon}
+              />
+            </View>
+          </View>
+
           <View style={styles.details}>
             <Text style={styles.title}>
               {film.title}
@@ -319,7 +369,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
   },
-
   separator: {
     height: 1,
     backgroundColor: "gray",
@@ -415,5 +464,13 @@ const styles = StyleSheet.create({
     marginTop: 20,
     color: "#888",
     fontSize: 16,
+  },
+  iconsContainer: {
+    flexDirection: "row",
+    justifyContent: "center",
+    marginTop: 8,
+  },
+  posterIcon: {
+    marginHorizontal: 10,
   },
 });

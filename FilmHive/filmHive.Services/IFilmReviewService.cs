@@ -12,5 +12,6 @@ namespace filmHive.Services
 {
     public interface IFilmReviewService:ICRUDServiceAsync<FilmReview, FilmReviewSearchObject, FilmReviewInsertObject, FilmReviewUpdateObject>
     {
+        Task<int> CountUsersWhoReviewedFilm(int filmId, CancellationToken cancellationToken);
     }
 }

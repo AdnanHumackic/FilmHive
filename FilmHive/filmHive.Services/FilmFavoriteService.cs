@@ -4,6 +4,7 @@ using filmHive.Services.Auth;
 using filmHive.Services.BaseServices.Implementation;
 using filmHive.Services.Database;
 using MapsterMapper;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -38,6 +39,15 @@ namespace filmHive.Services
             }
 
             return query;
+        }
+
+        public async Task<int> CountUsersWhoFavoritedFilm(int filmId, CancellationToken cancellationToken)
+        {
+            var numbersOfUsers = await Context.FilmFavorites
+                .Where(x => x.MovieId == filmId && x.IsActive == true)
+                .CountAsync(cancellationToken);
+
+            return numbersOfUsers;
         }
     }
 }

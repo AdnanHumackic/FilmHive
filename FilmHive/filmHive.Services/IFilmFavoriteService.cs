@@ -12,5 +12,6 @@ namespace filmHive.Services
 {
     public interface IFilmFavoriteService : ICRUDServiceAsync<FilmFavorite, FilmFavoriteSearchObject, FilmFavoriteInsertRequest, FilmFavoriteUpdateRequest>
     {
+        Task<int> CountUsersWhoFavoritedFilm(int filmId, CancellationToken cancellationToken);
     }
 }

@@ -16,5 +16,11 @@ namespace filmHive.API.Controllers
           : base(service)
         {
         }
+
+        [HttpGet("CountUsersWhoReviewedFilm")]
+        public Task<int> CountUsersWhoReviewedFilm(int filmId, CancellationToken cancellationToken)
+        {
+            return (_service as IFilmReviewService).CountUsersWhoReviewedFilm(filmId, cancellationToken);
+        }
     }
 }

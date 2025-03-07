@@ -1,5 +1,6 @@
 import BaseProvider from './baseService';
 import FilmFavorite from '../models/filmFavorite';
+import axios from 'axios';
 
 class FilmFavoriteService extends BaseProvider {
     constructor() {
@@ -27,6 +28,13 @@ class FilmFavoriteService extends BaseProvider {
     async deleteFilmFavorite(id) {
         const response = await this.delete(id);
         return response;
+    }
+
+    async countUsersWhoFavoritedFilm(filmId){
+        const url = `${BaseProvider.baseUrl}FilmFavorite/CountUsersWhoFavoritedFilm?filmId=${filmId}`;
+        const headers = this.createHeaders();
+        const response = await axios.get(url, { headers });
+        return response.data;
     }
 }
 export default FilmFavoriteService;

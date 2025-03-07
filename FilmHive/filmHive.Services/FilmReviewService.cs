@@ -7,6 +7,7 @@ using MapsterMapper;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -71,6 +72,15 @@ namespace filmHive.Services
         {
             entity.ReviewDate=DateTime.Now;
             await base.BeforeUpdateAsync(request, entity, cancellationToken);
+        }
+
+        public async Task<int> CountUsersWhoReviewedFilm(int filmId, CancellationToken cancellationToken)
+        {
+            var numberOfUsers = await Context.FilmReviews
+                .Where(x => x.MovieId == filmId && x.IsActive==true)
+                .CountAsync(cancellationToken);
+
+            return numberOfUsers;
         }
     }
 }
