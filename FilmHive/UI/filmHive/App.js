@@ -11,6 +11,7 @@ import UserProfileEditScreen from './screens/user/userProfileEditScreen';
 import AddFilmReviewScreen from './screens/filmReview/addFilmReviewScreen';
 import FilmReviewDetailsScreen from './screens/filmReview/filmReviewDetailsScreen';
 import UpdateFilmReviewScreen from './screens/filmReview/updateFilmReviewScreen';
+import AddFilmToListScreen from './screens/list/addFilmToListScreen';
 
 const Stack = createNativeStackNavigator();
 
@@ -64,6 +65,11 @@ export default function App() {
             <Stack.Screen
             name="UpdateFilmReview"
             component={UpdateFilmReviewScreen}
+            options={{ headerShown: false }}
+          />
+            <Stack.Screen
+            name="AddFilmToList"
+            component={AddFilmToListScreen}
             options={{ headerShown: false }}
           />
         </Stack.Navigator>

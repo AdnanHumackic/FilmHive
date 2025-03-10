@@ -185,7 +185,7 @@ export default function FilmDetailsScreen({ navigation }) {
           </TouchableOpacity>
           <TouchableOpacity
             style={styles.button}
-            onPress={() => console.log("y")}
+            onPress={() => navigation.navigate("AddFilmToList", { film })}
           >
             <Ionicons
               name="list-outline"
@@ -226,7 +226,11 @@ export default function FilmDetailsScreen({ navigation }) {
                       style={styles.profileImage}
                       source={
                         review.user.profilePicture
-                          ? { uri: review.user.profilePicture }
+                          ? {
+                              uri: Utils.base64ToImageUri(
+                                review.user.profilePicture
+                              ),
+                            }
                           : require("../../assets/defaultUser.png")
                       }
                     />

@@ -408,7 +408,7 @@ const styles = StyleSheet.create({
   },
   uploadProfilePicture: {
     position: "absolute",
-    top: 5,
+    top: 70,
     right: 40,
     backgroundColor: "#E9A6A6",
     borderRadius: 15,

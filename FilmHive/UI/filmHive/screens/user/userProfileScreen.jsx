@@ -143,8 +143,12 @@ export default function UserProfileScreen({ navigation }) {
                     <Image
                       style={styles.profileImage}
                       source={
-                        review.user.profilePicture
-                          ? { uri: review.user.profilePicture }
+                        AuthProvider.profilePicture
+                          ? {
+                              uri: Utils.base64ToImageUri(
+                                review.user.profilePicture
+                              ),
+                            }
                           : require("../../assets/defaultUser.png")
                       }
                     />

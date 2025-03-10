@@ -282,4 +282,10 @@ const styles = StyleSheet.create({
     marginRight: 4,
     color: "#1F1D36",
   },
+  buttonText: {
+    color: "#1F1D36",
+    fontSize: 16,
+    fontWeight: "bold",
+    textAlign: "center",
+  },
 });
